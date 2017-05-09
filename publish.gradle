@@ -46,7 +46,7 @@ pom {
     if (isAndroid) {
         packaging 'aar'
     }
-    description ''
+    description 'Backport new android api calls to support lib versions.'
     url siteUrl
 
     scm {
