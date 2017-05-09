@@ -1,5 +1,7 @@
 # silent-support
+
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/me.tatarka.silentsupport/silent-support/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/me.tatarka.silentsupport/silent-support)
+
 Backport new android api calls to support lib versions.
 
 The support lib provideds many useful wrappers and backports of android apis. However, using them requires 
