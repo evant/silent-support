@@ -1,0 +1,39 @@
+apply plugin: 'com.android.library'
+apply from: '../publish.gradle'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        minSdkVersion 1
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+configurations {
+    lintChecks
+}
+
+dependencies {
+    lintChecks project(path: ':silent-support-lint', configuration: 'lintChecks')
+}
+
+task copyLintJar(type: Copy, dependsOn: [':silent-support-lint:jar']) {
+    from("../silent-support-lint/build/libs/silent-support-lint-${version}-out.jar") {
+        rename { 'lint.jar' }
+    }
+    into 'build/intermediates/lint/'
+}
+
+project.afterEvaluate {
+    def compileLintTask = project.tasks.find { it.name == 'compileLint' }
+    compileLintTask.dependsOn(copyLintJar)
+}

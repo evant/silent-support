@@ -1,0 +1,68 @@
+buildscript {
+    ext.kotlin_version = '1.1.2'
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.gradle.publish:plugin-publish-plugin:0.9.7"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'idea'
+apply plugin: 'com.gradle.plugin-publish'
+apply from: '../publish.gradle'
+
+configurations {
+    provided
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+}
+
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.provided]
+    }
+}
+
+dependencies {
+    compile gradleApi()
+    compile project(':silent-support')
+    provided "com.android.tools.build:gradle:1.5.0"
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.7.17'
+    testCompile 'me.tatarka.assertk:assertk:1.0-SNAPSHOT'
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+repositories {
+    jcenter()
+}
+
+// The configuration example below shows the minimum required properties
+// configured to publish your plugin to the plugin portal
+pluginBundle {
+    website = 'https://github.com/evant/silent-support'
+    vcsUrl = 'https://github.com/evant/silent-support'
+    description = "Translates new api calls to support calls so you don't have to"
+    tags = ['android']
+
+    plugins {
+        silentSupportPlugin {
+            id = 'me.tatarka.silent-support'
+            displayName = 'Silent Support'
+        }
+    }
+}

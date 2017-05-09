@@ -1,0 +1,72 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'net.sf.proguard:proguard-gradle:5.3.2'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'idea'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+// Add Android SDK repositories to the lookup path for standard java library
+// projects.
+def logger = new com.android.build.gradle.internal.LoggerWrapper(project.logger)
+def sdkHandler = new com.android.build.gradle.internal.SdkHandler(project, logger)
+for (File file : sdkHandler.sdkLoader.repositories) {
+    repositories.maven {
+        url = file.toURI()
+    }
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+configurations {
+    lintChecks
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+task proguard(type: proguard.gradle.ProGuardTask, dependsOn: ['shadowJar']) {
+    configuration 'proguard-rules.pro'
+
+    injars "build/libs/silent-support-lint-${version}-all.jar"
+    outjars "build/libs/silent-support-lint-${version}-out.jar"
+}
+
+dependencies {
+    compile(project(":silent-support")) {
+        exclude(group: 'com.android.tools.lint')
+    }
+    compileOnly "com.android.tools.lint:lint-api:${lintVersion}"
+    compileOnly "com.android.tools.lint:lint-checks:${lintVersion}"
+
+    lintChecks files(proguard.outJarFiles)
+}
+
+idea {
+    module {
+        scopes.COMPILE.plus += [configurations.compileOnly]
+    }
+}
+
+jar {
+    manifest {
+        attributes('Lint-Registry': 'me.tatarka.silentsupport.lint.IssueRegistry')
+    }
+}
+
+shadowJar {
+}
+
+proguard.libraryjars(configurations.compileOnly.files)
+shadowJar.finalizedBy proguard
+jar.finalizedBy shadowJar

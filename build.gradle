@@ -1,0 +1,37 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext.kotlin_version = '1.1.2'
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.4.0-alpha7'
+        classpath "me.tatarka.gradle:pom:1.0"
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.android.tools.external.com-intellij:uast:162.2228.14'
+    }
+}
+
+allprojects {
+    version = "0.1"
+    group = "me.tatarka.silentsupport"
+
+    ext {
+        lintVersion = '25.4.0-alpha7'
+    }
+
+    repositories {
+        jcenter()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
