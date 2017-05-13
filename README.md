@@ -20,7 +20,7 @@ buildscript {
    }
 
    dependencies {
-      classpath "me.tatarka.silentsupport:silent-support-gradle-plugin:0.1"
+      classpath "me.tatarka.silentsupport:silent-support-gradle-plugin:0.2"
    }
 }
 
