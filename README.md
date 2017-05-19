@@ -11,7 +11,7 @@ is replaced with a custom lint which will ignore successfully backported calls.
 
 ## Usage
 
-Currently requires android gradle plugin `2.4.0-alpha7`
+Currently requires android gradle plugin `3.0.0-alpha1`
 
 ```
 buildscript {
@@ -20,7 +20,7 @@ buildscript {
    }
 
    dependencies {
-      classpath "me.tatarka.silentsupport:silent-support-gradle-plugin:0.2"
+      classpath "me.tatarka.silentsupport:silent-support-gradle-plugin:0.3"
    }
 }
 
