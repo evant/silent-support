@@ -81,7 +81,7 @@ class SilentSupportApiDetector : ApiDetector() {
     }
 
     private open class SilentSupportIssueRewriter : IssueRewriter {
-        override fun rewriteIssue(issue: Issue, location: Location?, message: String?): Issue? {
+        override fun rewriteIssue(issue: Issue, location: Location?, message: String?, quickFixData: LintFix?): Issue? {
             if (ApiDetector.UNSUPPORTED.id == issue.id) {
                 return UNSUPPORTED
             } else {

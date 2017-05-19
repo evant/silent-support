@@ -2,6 +2,9 @@ buildscript {
     repositories {
         mavenLocal()
         jcenter()
+        maven {
+            url 'https://maven.google.com'
+        }
     }
     dependencies {
         classpath "me.tatarka.silentsupport:silent-support-gradle-plugin:$version"

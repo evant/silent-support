@@ -18,17 +18,16 @@ class SilentSupportTransform(private val project: Project) : Transform() {
 
     override fun getName(): String = "silentSupport"
 
-    override fun transform(context: Context,
-                           inputs: Collection<TransformInput>,
-                           referencedInputs: Collection<TransformInput>,
-                           outputProvider: TransformOutputProvider,
-                           isIncremental: Boolean) {
+    override fun transform(transformInvocation: TransformInvocation) {
+        val context = transformInvocation.context
+        val outputProvider = transformInvocation.outputProvider
+        val inputs = transformInvocation.inputs
         context.logging.captureStandardOutput(LogLevel.INFO)
 
         val outputDir = outputProvider.getContentLocation(name, inputTypes, scopes, Format.DIRECTORY)
         val cacheDir = File(project.buildDir, "intermediates/lint-cache")
 
-        val variant = getVariant(outputDir)
+        val variant = variantMap[context.variantName]!!
         val classpath = getClasspath(variant)
         val apiLevel = variant.mergedFlavor.minSdkVersion.apiLevel
         val generateSupportMetadataTask = getOrCreateSupportMetadataTask(variant)
@@ -104,24 +103,6 @@ class SilentSupportTransform(private val project: Project) : Transform() {
     private fun toOutput(inputDir: File, outputDir: File, file: File): File =
             outputDir.toPath().resolve(inputDir.toPath().relativize(file.toPath())).toFile()
 
-    private fun getVariant(outputDir: File): BaseVariant {
-        // Extract the variant from the output path assuming it's in the form like:
-        // - '*/intermediates/transforms/silentSupport/<VARIANT>
-        // - '*/intermediates/transforms/silentSupport/<VARIANT>/folders/1/1/silentSupport
-        // This will no longer be needed when the transform api supports per-variant transforms
-        val parts = outputDir.toURI().path.split(Regex("/intermediates/transforms/$name/|/folders/[0-9]+"))
-
-        if (parts.size < 2) {
-            throw ProjectConfigurationException("Could not extract variant from output dir: $outputDir", null)
-        }
-
-        val variantName = parts[1]
-        val variant = variantMap[variantName] ?:
-                throw ProjectConfigurationException("Missing variant: ' + variantName + ' from output dir: $outputDir", null)
-
-        return variant
-    }
-
     private fun getClasspath(variant: BaseVariant): FileCollection {
         var classpathFiles = variant.javaCompile.classpath
         // bootClasspath isn't set until the last possible moment because it's expensive to look
@@ -141,7 +122,7 @@ class SilentSupportTransform(private val project: Project) : Transform() {
 
     override fun getInputTypes(): Set<QualifiedContent.ContentType> = setOf(QualifiedContent.DefaultContentType.CLASSES)
 
-    override fun getScopes(): Set<QualifiedContent.Scope> = setOf(QualifiedContent.Scope.PROJECT)
+    override fun getScopes(): MutableSet<QualifiedContent.Scope> = mutableSetOf(QualifiedContent.Scope.PROJECT)
 
-    override fun getReferencedScopes(): Set<QualifiedContent.Scope> = emptySet()
+    override fun getReferencedScopes(): MutableSet<QualifiedContent.Scope> = mutableSetOf()
 }

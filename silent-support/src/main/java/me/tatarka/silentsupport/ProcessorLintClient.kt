@@ -23,7 +23,7 @@ class ProcessorLintClient(
 
     override fun getXmlParser(): XmlParser = throw NotImplementedError()
 
-    override fun report(context: Context, issue: Issue, severity: Severity?, location: Location?, message: String?, format: TextFormat?, args: Any?) {
+    override fun report(context: Context, issue: Issue, severity: Severity?, location: Location?, message: String?, format: TextFormat?, listFx: LintFix?) {
         throw NotImplementedError()
     }
 
