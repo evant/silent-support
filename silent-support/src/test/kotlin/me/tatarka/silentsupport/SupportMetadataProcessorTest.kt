@@ -29,11 +29,12 @@ class SupportMetadataProcessorTest {
     @Test
     fun `can find ContextCompat#getDrawable`() {
         val lintClient = object : LintClient() {
+
             override fun getUastParser(p0: Project): UastParser {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun report(p0: Context?, p1: Issue?, p2: Severity?, p3: Location?, p4: String?, p5: TextFormat?, p6: Any?) {
+            override fun report(context: Context, issue: Issue, severity: Severity?, location: Location?, message: String?, format: TextFormat?, fix: LintFix?) {
             }
 
             override fun log(severity: Severity?, exception: Throwable?, format: String?, vararg args: Any?) {
@@ -51,7 +52,7 @@ class SupportMetadataProcessorTest {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun getCacheDir(create: Boolean): File {
+            override fun getCacheDir(name: String, create: Boolean): File {
                 return outputDir
             }
         }

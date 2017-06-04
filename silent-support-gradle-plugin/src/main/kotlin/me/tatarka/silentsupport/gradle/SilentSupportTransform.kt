@@ -50,7 +50,7 @@ class SilentSupportTransform(private val project: Project) : Transform() {
         for (input in inputs) {
             for (dirInput in input.directoryInputs) {
                 val inputDir = dirInput.file
-                if (isIncremental) {
+                if (transformInvocation.isIncremental) {
                     for ((file, status) in dirInput.changedFiles) {
                         if (status == Status.ADDED || status == Status.CHANGED) {
                             transformFile(processor, apiLevel, inputDir, outputDir, file)
@@ -104,9 +104,11 @@ class SilentSupportTransform(private val project: Project) : Transform() {
             outputDir.toPath().resolve(inputDir.toPath().relativize(file.toPath())).toFile()
 
     private fun getClasspath(variant: BaseVariant): FileCollection {
+        @Suppress("DEPRECATION")
         var classpathFiles = variant.javaCompile.classpath
         // bootClasspath isn't set until the last possible moment because it's expensive to look
         // up the android sdk path.
+        @Suppress("DEPRECATION")
         val bootClasspath = variant.javaCompile.options.bootClasspath
         if (bootClasspath != null) {
             classpathFiles = classpathFiles.plus(project.files(bootClasspath.split(File.pathSeparator)))

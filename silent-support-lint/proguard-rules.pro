@@ -13,6 +13,8 @@
 -keep public class **.IssueRegistry { *; }
 
 -dontwarn org.jetbrains.uast.**
+-dontwarn com.android.ide.**
+-dontwarn kotlin.**
 #-dontwarn com.intellij.**
 #-dontwarn com.android.tools.lint.**
 #-dontwarn org.objectweb.asm.**

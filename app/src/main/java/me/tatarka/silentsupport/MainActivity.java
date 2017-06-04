@@ -1,6 +1,9 @@
 package me.tatarka.silentsupport;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -17,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
                 null,
                 null
         );
+
+        ConnectivityManager c = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        c.isActiveNetworkMetered();
 
 //        createConfigurationContext(getResources().getConfiguration());
     }

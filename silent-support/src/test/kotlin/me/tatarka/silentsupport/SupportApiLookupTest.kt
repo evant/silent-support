@@ -49,5 +49,12 @@ class SupportApiLookupTest {
 
         assert(result).isLessThan(0)
     }
+
+    @Test
+    fun `finds ConnectivityManagerCompat#isActiveNetworkMetered`() {
+        val result = apiLookup.getCallVersion("android/support/v4/net/ConnectivityManagerCompat", "isActiveNetworkMetered", "(Landroid/net/ConnectivityManager;)Z")
+
+        assert(result).isGreaterThan(0)
+    }
 }
 

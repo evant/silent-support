@@ -3,7 +3,9 @@ package me.tatarka.silentsupport
 import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.net.ConnectivityManager
 import android.support.v4.content.ContextCompat
+import android.support.v4.net.ConnectivityManagerCompat
 import android.support.v4.view.ViewCompat
 import android.view.View
 import me.tatarka.assertk.assert
@@ -24,6 +26,7 @@ class SilentSupportProcessorTest {
     fun setup() {
         ContextCompat.reset()
         ViewCompat.reset()
+        ConnectivityManagerCompat.reset()
     }
 
     private fun processor(apiLevel: Int): SilentSupportProcessor {
@@ -123,5 +126,21 @@ class SilentSupportProcessorTest {
 
         assert(result).isNotNull()
         assert(ViewCompat.record_getX).isTrue()
+    }
+
+    @Test
+    fun `conMan#isActiveNetworkMonitored to ConnectivityManagerCompat#isActiveNetworkMonitored because api level is not high enough`() {
+        val inputClassFile = compile("TestIsActiveNetwork", """public class TestIsActiveNetwork implements java.util.function.Function<android.net.ConnectivityManager, Boolean> {
+            public Boolean apply(android.net.ConnectivityManager conMan) {
+                return conMan.isActiveNetworkMetered();
+            }
+        }""")
+        val processedClass = processor(14).process(inputClassFile.classFile())
+        inputClassFile.replaceWith(processedClass)
+        val testClass: Function<ConnectivityManager, Boolean> = inputClassFile.load().newInstance() as Function<ConnectivityManager, Boolean>
+        val result = testClass.apply(mock(ConnectivityManager::class.java))
+
+        assert(result).isNotNull()
+        assert(ConnectivityManagerCompat.record_isActiveNetworkMetered).isTrue()
     }
 }

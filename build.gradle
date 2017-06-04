@@ -1,6 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.1.2'
+    ext.kotlin_version = '1.1.2-4'
+    ext.agp_version = '3.0.0-alpha3'
     repositories {
         jcenter()
         maven {
@@ -11,7 +12,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha1'
+        classpath "com.android.tools.build:gradle:$agp_version"
         classpath "me.tatarka.gradle:pom:1.0"
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -19,11 +20,11 @@ buildscript {
 }
 
 allprojects {
-    version = "0.3"
+    version = "0.4"
     group = "me.tatarka.silentsupport"
 
     ext {
-        lintVersion = '26.0.0-alpha1'
+        lintVersion = '26.0.0-alpha3'
     }
 
     repositories {
